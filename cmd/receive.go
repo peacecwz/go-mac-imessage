@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/peacecwz/pinsms/internal"
+	"github.com/peacecwz/mac-sms-tracker/internal"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -17,11 +17,10 @@ var receiveCmd = &cobra.Command{
 
 		interval, _ := cmd.Flags().GetInt64("interval")
 
-		sqlite := internal.NewSqlite()
-		err := internal.TrackSMS(sqlite, interval, func(sms []internal.SMS) {
+		err := internal.TrackSMS(interval, func(sms []internal.SMS) {
 			for _, s := range sms {
 				fmt.Printf("Message: %s from %s\n", s.Content, s.From)
-				err := sqlite.SetRead(s.Id)
+				err := s.Read()
 				if err != nil {
 					log.Fatalln(err)
 				}

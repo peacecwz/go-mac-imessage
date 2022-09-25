@@ -85,6 +85,7 @@ ORDER BY message_date ASC;
 			From:     from,
 			Service:  service,
 			IsRead:   isRead,
+			db:       s,
 		})
 	}
 

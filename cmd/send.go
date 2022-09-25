@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/peacecwz/pinsms/internal"
+	"github.com/peacecwz/mac-sms-tracker/internal"
 	"github.com/spf13/cobra"
 )
 

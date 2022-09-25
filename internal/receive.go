@@ -5,7 +5,9 @@ import (
 	"time"
 )
 
-func TrackSMS(sqlite *Sqlite, interval int64, trigger func(sms []SMS)) error {
+func TrackSMS(interval int64, trigger func(sms []SMS)) error {
+	sqlite := NewSqlite()
+
 	for {
 		sms, err := sqlite.GetAllSMS()
 		if err != nil {

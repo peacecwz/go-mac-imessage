@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/peacecwz/pinsms/cmd"
+	"github.com/peacecwz/mac-sms-tracker/cmd"
 	"github.com/spf13/cobra"
 )
 

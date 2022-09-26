@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/peacecwz/go-mac-imessage/internal"
+	"github.com/peacecwz/go-mac-imessage/sms"
 	"github.com/spf13/cobra"
 )
 
@@ -13,7 +13,7 @@ var sendCmd = &cobra.Command{
 	Short: "Send a message",
 	Long:  `Send a message`,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		err := internal.Send(message, to)
+		err := sms.Send(message, to)
 		if err == nil {
 			fmt.Println("Sent")
 		}
@@ -22,9 +22,9 @@ var sendCmd = &cobra.Command{
 	},
 }
 
-func InitializeSmsCmd(cmd *cobra.Command) {
+func init() {
 	sendCmd.PersistentFlags().StringVarP(&message, "message", "m", "", "Message to send")
 	sendCmd.PersistentFlags().StringVarP(&to, "to", "t", "", "Phone number to send")
 
-	cmd.AddCommand(sendCmd)
+	RootCmd.AddCommand(sendCmd)
 }

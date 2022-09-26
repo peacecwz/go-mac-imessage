@@ -1,4 +1,4 @@
-package internal
+package sms
 
 type SMSInterface interface {
 	Read() error
@@ -12,9 +12,9 @@ type SMS struct {
 	From     string
 	Service  string
 	IsRead   bool
-	db       *Sqlite
+	db       *sqlite
 }
 
 func (s SMS) Read() error {
-	return s.db.SetRead(s.Id)
+	return s.db.setRead(s.Id)
 }

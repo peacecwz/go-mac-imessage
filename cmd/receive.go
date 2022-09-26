@@ -2,7 +2,7 @@ package cmd
 
 import (
 	"fmt"
-	"github.com/peacecwz/go-mac-imessage/internal"
+	"github.com/peacecwz/go-mac-imessage/sms"
 	"github.com/spf13/cobra"
 	"log"
 )
@@ -17,7 +17,7 @@ var receiveCmd = &cobra.Command{
 
 		interval, _ := cmd.Flags().GetInt64("interval")
 
-		err := internal.TrackSMS(interval, func(sms []internal.SMS) {
+		err := sms.TrackSMS(interval, func(sms []sms.SMS) {
 			for _, s := range sms {
 				fmt.Printf("Message: %s from %s\n", s.Content, s.From)
 				err := s.Read()
@@ -30,7 +30,7 @@ var receiveCmd = &cobra.Command{
 	},
 }
 
-func InitializeReceiveCmd(cmd *cobra.Command) {
+func init() {
 	receiveCmd.PersistentFlags().Int64VarP(&intervalSecond, "interval", "i", 100, "Interval to check for new messages. It's millisecond")
-	cmd.AddCommand(receiveCmd)
+	RootCmd.AddCommand(receiveCmd)
 }

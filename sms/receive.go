@@ -1,4 +1,4 @@
-package internal
+package sms
 
 import (
 	"database/sql"
@@ -6,14 +6,15 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 	"log"
 	"os"
+	"time"
 )
 
-type Sqlite struct {
+type sqlite struct {
 	db     *sql.DB
 	cursor int64
 }
 
-func NewSqlite() *Sqlite {
+func newSqlite() *sqlite {
 	homeDir, err := os.UserHomeDir()
 	if err != nil {
 		panic(err)
@@ -25,12 +26,12 @@ func NewSqlite() *Sqlite {
 		log.Fatal(err)
 	}
 
-	return &Sqlite{
+	return &sqlite{
 		db: db,
 	}
 }
 
-func (s *Sqlite) SetRead(id string) error {
+func (s *sqlite) setRead(id string) error {
 	_, err := s.db.Exec(`UPDATE message SET is_read = 1 WHERE guid = ?;`, id)
 	if err != nil {
 		log.Fatal(err)
@@ -40,7 +41,7 @@ func (s *Sqlite) SetRead(id string) error {
 	return nil
 }
 
-func (s *Sqlite) GetAllSMS() ([]SMS, error) {
+func (s *sqlite) getAllSMS() ([]SMS, error) {
 	rows, err := s.db.Query(`
 SELECT message.guid                                                                    as 'id',
        datetime(message.date / 1000000000 + strftime("%s", "2001-01-01"), "unixepoch") AS 'date',
@@ -87,15 +88,32 @@ ORDER BY message_date ASC;
 			IsRead:   isRead,
 			db:       s,
 		})
+
 	}
 
 	return messages, nil
 }
 
-func (s *Sqlite) Close() {
+func (s *sqlite) close() {
 	err := s.db.Close()
 	if err != nil {
 		log.Fatal(err)
 		return
+	}
+}
+
+func TrackSMS(interval int64, trigger func(sms []SMS)) error {
+	sqlite := newSqlite()
+
+	for {
+		sms, err := sqlite.getAllSMS()
+		if err != nil {
+			log.Fatalln(err)
+			return err
+		}
+
+		trigger(sms)
+
+		time.Sleep(time.Duration(interval) * time.Millisecond)
 	}
 }

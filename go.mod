@@ -1,4 +1,4 @@
-module github.com/peacecwz/mac-sms-tracker
+module github.com/peacecwz/go-mac-imessage
 
 go 1.19
 

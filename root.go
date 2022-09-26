@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/peacecwz/mac-sms-tracker/cmd"
+	"github.com/peacecwz/go-mac-imessage/cmd"
 	"github.com/spf13/cobra"
 )
 
